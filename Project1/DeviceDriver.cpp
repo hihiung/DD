@@ -1,6 +1,7 @@
 #include "DeviceDriver.h"
 #include <stdexcept>
 const int READ_REPETITION = 4;
+const int VALUE_EMPTY_SPACE = 0xFF;
 
 DeviceDriver::DeviceDriver(FlashMemoryDevice* hardware) : m_hardware(hardware)
 {}
@@ -19,6 +20,10 @@ int DeviceDriver::read(long address)
 
 void DeviceDriver::write(long address, int data)
 {
-    // TODO: implement this method
-    m_hardware->write(address, (unsigned char)data);
+    int curr_val = (int) m_hardware->read(address);
+
+    if (curr_val != VALUE_EMPTY_SPACE)
+        throw std::exception("값이 있어여");
+
+    m_hardware->write(address, (unsigned char) data);
 }
