@@ -49,3 +49,24 @@ TEST(DeviceDriverTest, Read_SUCCESS)
 	DeviceDriver dd(&flash_mock);
 	EXPECT_THAT(dd.read(0x00), Eq(3));
 }
+
+TEST(DeviceDriverTest, Write_SUCCESS)
+{
+	HwMock flash_mock;
+	EXPECT_CALL(flash_mock, read(0x00))
+		.WillRepeatedly(Return(255));
+
+	DeviceDriver dd(&flash_mock);
+	dd.write(0x00, 130);
+	EXPECT_NO_THROW(dd.read(0x00));
+}
+
+TEST(DeviceDriverTest, Write_FAIL)
+{
+	HwMock flash_mock;
+	EXPECT_CALL(flash_mock, read(0x00))
+		.WillRepeatedly(Return(130));
+
+	DeviceDriver dd(&flash_mock);
+	EXPECT_THROW(dd.write(0x00, 130), std::exception);
+}
